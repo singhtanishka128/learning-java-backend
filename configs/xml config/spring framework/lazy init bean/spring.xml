@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="alien1" class="com.telusko.Alien" autowire="byType">
+        <property name="age" value="22"/>
+        <property name="com" ref="comp" />
+    </bean>
+
+    <bean id="comp" class="com.telusko.Laptop" primary="true" >
+    </bean>
+
+    <bean id="com2" class="com.telusko.Desktop" lazy-init="true" >
+    </bean>
+
+</beans>
