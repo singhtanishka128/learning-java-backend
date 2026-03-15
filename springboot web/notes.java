@@ -239,4 +239,269 @@ this is because springBoot doesnot support jsp , we gotta convert jsp into servl
 so we add one more dep -> tomcat jasper (imp: version should be as same as the embedded tomcat)
 after we update our pom.xml and rerun now this time we get out html rendered as we wanted.
 
-*/
+
+sending to a client: 
+
+we get 2 nums from client (fetching data), we add those (processing data), we send the result (sending data)
+create a form structure in index.jsp, create a style.css for styling link both the files 
+
+fetching data the servlet way-> --------------------------------------------------------------------------------------------------------------------------------
+1st) using session
+
+in homeController:
+    @RequestMapping("add")
+    public String add(HttpServletRequest req, HttpSession session) {
+
+        int num1=Integer.parseInt(req.getParameter("num1"));    // getParameter returns a string so we convert into integer
+        int num2=Integer.parseInt(req.getParameter("num2"));
+        int result=num1+num2;
+        System.out.println(result);
+        session.setAttribute("AddResult",result);
+        return "result.jsp";
+    }
+
+
+in result.jsp:
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> result is : <%= session.getAttribute("AddResult") %> </h2>
+
+    </body>
+</html>
+
+
+2nd) using JSTL 
+
+in result.jsp:
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> result is : ${AddResult} </h2>
+
+    </body>
+</html>
+
+fetching data the spring way->-----------------------------------------------------------------------------------------------------------------------------
+1st) using same var names
+homecontroller:
+    @RequestMapping("add")
+    public String add(int num1, int num2, HttpSession session) {
+        int result=num1+num2;
+        System.out.println(result);
+
+        session.setAttribute("AddResult",result);
+
+        return "result.jsp";
+    }
+
+result.jsp:
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> result is : ${AddResult} </h2>
+
+    </body>
+</html>
+
+2nd) if we dont want to use same var name: using @RequestParam mentioning original var name
+homecontroller
+
+    @RequestMapping("add")
+    public String add(@RequestParam("num1") int num, int num2, HttpSession session) {
+
+        int result=num+num2;
+        System.out.println(result);
+
+        session.setAttribute("AddResult",result);
+
+        return "result.jsp";
+    }
+same result.jsp
+session obj is for storing data for further req, getParameter simply fetches parameter val
+
+3rd) without using session obj i.e using springboot mvc
+controller is responsible for getting the req from clien and view is responsible for displaying the data and we pass the processed data to view
+with the help of model so
+homecont:
+ @RequestMapping("add")
+    public String add(@RequestParam("num1") int num, int num2, Model model) {
+
+        int result=num+num2;
+        System.out.println(result);
+
+        model.addAttribute("AddResult", result)
+
+        return "result.jsp";
+    }
+        
+same res
+result.jsp:
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> result is : ${AddResult} </h2>
+
+    </body>
+</html>
+
+
+
+moving from jsp view engine to thymeleaf view engine->
+
+JSP (JavaServer Pages):
+Converts JSP → Servlet → HTML
+Runs inside a servlet container like apache tomcat
+
+Thymeleaf:
+Processes HTML templates → generates dynamic HTML using values passed from the controller.
+Works seamlessly with Spring Boot and Spring MVC, making it the preferred view engine for modern Spring applications.
+Uses special HTML attributes like th:text, th:if, th:each to bind and display data inside HTML pages.
+
+
+In Spring Boot, when a controller returns a view name (like "result") instead of the full file name (result.jsp), 
+the framework uses a View Resolver to figure out where the view file is located and what its extension is. 
+Since the JSP files are stored in a separate folder (like /views) and the extension .jsp is not written in the return statement, 
+we configure these details in the application.properties file. 
+By setting the prefix and suffix properties (spring.mvc.view.prefix=/views/ and spring.mvc.view.suffix=.jsp), 
+the View Resolver automatically maps "result" to /views/result.jsp. 
+This allows the application to correctly locate and render the JSP file when the controller returns the view name.
+
+application.properties:
+spring.mvc.view.prefix=/views/
+spring.mvc.view.suffix=.jsp
+
+using ModelAndView : ModelAndView simply wraps both in one object so Spring knows what page to open and what data to show on that page.
+ModelAndView is used when you want to send both data and the view name together from the controller to the UI.
+
+homeCont:
+
+@Controller
+public class HomeController {
+
+    @RequestMapping("/")
+    public String home() {
+        System.out.println("Home method called");
+        return "index";
+    }
+
+    @RequestMapping("add")
+    public ModelAndView add(@RequestParam("num1") int num, int num2, ModelAndView mv) {
+
+        int result=num+num2;
+        System.out.println(result);
+        mv.addObject("result", result);
+        mv.setViewName("result");
+        return mv;
+    }
+
+}
+
+same result.jsp
+eg of storing an employee, we create employee class name,id(pojo)
+
+homecont:
+    @RequestMapping("addEmployee")
+    public ModelAndView addEmployee(@RequestParam("aid") int aid, @RequestParam("aname") String aname, ModelAndView mv) {
+        Employee employee = new Employee();
+        employee.setAid(aid);
+        employee.setAname(aname);
+        mv.addObject("employee", employee);
+        mv.setViewName("result");
+        return mv;
+    }
+
+result.jsp
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> welcome new employee: ${employee} </h2>
+    </body>
+</html>
+
+what if we had 10 or multiple varibles? we wont use requestParams instead we store the object data as a whole using modelattribute
+homecontroller:
+@RequestMapping("addEmployee")
+    public String addEmployee(@ModelAttribute Employee employee) {
+        return "result";
+    }
+
+<%@page language="java" %>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> welcome new employee: ${employee} </h2>
+    </body>
+</html>
+
+or
+
+homecontroller:
+@RequestMapping("addEmployee")
+    public String addEmployee(@ModelAttribute("emp") Employee employee) {
+        return "result";
+    }
+
+<%@page language="java" %>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> welcome new employee: ${emp} </h2>
+    </body>
+</html>
+
+@ModelAttribute is used when we are using different names, otherwise it is optional,
+also used for referring for specific value name eg
+homecont:
+    @ModelAttribute("course")
+    public String courseName(){
+        return "java";
+    }
+
+    @RequestMapping("addEmployee")
+    public String addEmployee(@ModelAttribute("emp") Employee employee) {
+        return "result";
+    }
+
+jsp:
+<%@page language="java" %>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    </body>
+        <h2> welcome new employee: ${emp} </h2>
+        <h2> youre are an elite ${course} developer </h2>
+
+    </body>
+</html>
+
+jsp was used in older times, modern days project use thymeleaf  */
+
+
+
