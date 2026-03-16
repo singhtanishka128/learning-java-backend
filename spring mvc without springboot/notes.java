@@ -76,5 +76,7 @@ Overall request flow:
 Client Request → Tomcat → DispatcherServlet → Controller → View Resolver → JSP View → Response.
 
 In traditional Spring MVC, many configurations like servlet mapping, controller scanning, and view resolution must be done manually. This gives more control but requires more setup. Spring Boot simplifies this process by automatically configuring most of these components, which is why most modern projects prefer Spring Boot.
-
+If your servlet name is telusko, what configuration file name does the DispatcherServlet look for by default? telusko-servlet.xml in WEB-INF
+What two things must you typically declare in *-servlzet.xml so Spring can find annotation-based controllers? <ctx:component-scan>(base package) and <ctx:annotation-config>
+check udemy mcqs for more
 */
