@@ -501,7 +501,70 @@ jsp:
     </body>
 </html>
 
-jsp was used in older times, modern days project use thymeleaf  */
+jsp was used in older times, modern days project use thymeleaf when to implement server side rendering
+In modern web development, applications usually have separate frontend and backend.
+The backend is built using Spring Boot (or Spring framework).
+The frontend is built using frameworks like React or Angular.
+These communicate using APIs (HTTP/REST).
+
+Older Approach:
+Backend and frontend were often handled together using technologies like JavaServer Pages (JSP).
+Modern Alternative (without separate frontend):
+Thymeleaf can be used as a server-side template engine.
+It allows developers to generate dynamic HTML directly from the Spring backend.
+This keeps frontend and backend in the same project but using a cleaner modern approach.
+
+Modern apps mostly use:
+React
+Angular
+Vue.js
+with a backend like Spring Boot.
+
+This is called a separate frontend–backend architecture (frontend talks to backend via REST APIs).
+Big companies almost always build apps this way.
+Where Thymeleaf fits?
+Thymeleaf is a server-side template engine used with Spring.
+It generates HTML directly from the backend.
+It’s commonly used for:
+Simple web apps
+Internal company dashboards
+Admin panels
+Small CRUD applications
+Traditional MVC projects
 
 
+Monolithic architecture is a software design where the entire application is built and deployed as a single unified system. 
+All components such as the user interface, business logic, and database access are tightly integrated into one codebase. 
+Technologies like Spring Boot with Thymeleaf often follow this approach, 
+where the server handles both backend logic and page rendering. 
+It is simpler to develop, test, and deploy initially, but as the application grows, 
+it becomes harder to scale and maintain because any change requires redeploying the entire application.
+
+In contrast, microservices architecture divides an application into multiple small, independent services, 
+where each service performs a specific function and communicates with others through APIs. 
+For example, separate services may handle user management, payments, and product catalog. 
+Modern applications often use frontend frameworks like React or Angular that interact with these backend services. 
+Microservices make large systems easier to scale, update, and maintain because 
+each service can be developed and deployed independently, 
+although they introduce more complexity in communication and system management. */
+
+
+
+
+/* sending,fetching data using thymeleaf (modern in older formats)
+
+setup -> remove jasper dependency, 
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+</dependency>
+
+instead of webmvc write thymeleaf
+replace index nd result .jsp extension with .html
+thymeleaf seraches for html files in the template folder
+we add the thymelaf url to create a th tag and use it to represent every value.*/
+
+/* jsp vs thymeleaf
+in jsp we add java at the top of html file and use java objects to represent value
+in th, we use tags to add value within quotes */
 

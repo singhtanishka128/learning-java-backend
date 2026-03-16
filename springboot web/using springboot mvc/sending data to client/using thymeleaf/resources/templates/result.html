@@ -1,0 +1,13 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<h2 th:text=" 'Welcome new employee: ' + ${emp} ">fallback</h2>
+
+<h2 th:text=" 'You are an elite ' + ${course} + ' developer' ">fallback</h2>
+
+</body>
+</html>
